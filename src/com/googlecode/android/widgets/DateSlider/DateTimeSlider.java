@@ -20,13 +20,14 @@ package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.googlecode.android.widgets.DateSlider.TimeView.DayTimeLayoutView;
+import com.googlecode.android.widgets.DateSlider.TimeView.TimeLayoutView;
 
 public class DateTimeSlider extends DateSlider {
 
@@ -104,6 +105,14 @@ public class DateTimeSlider extends DateSlider {
 			return new TimeObject(String.format("%tb %tY",c,c), startTime, endTime);
 		}
 		
+		@Override
+		/**
+		 * rather than a standard TextView this is returning a LimearLayout with two TextViews
+		 */
+		public TimeView createView(Context context, boolean isCenterView) {
+			return new TimeLayoutView(context, isCenterView,25,8,0.95f);
+		}
+		
 	};
 	
 
@@ -138,7 +147,15 @@ public class DateTimeSlider extends DateSlider {
 			c.set(year, month, day, 23, 59, 59);
 			c.set(Calendar.MILLISECOND, 999);
 			long endTime = c.getTimeInMillis();
-			return new TimeObject(String.format("%ta %td",c,c), startTime, endTime);
+			return new TimeObject(String.format("%td %ta",c,c), startTime, endTime);
+		}
+		
+		@Override
+		/**
+		 * rather than a standard TextView this is returning a LimearLayout with two TextViews
+		 */
+		public TimeView createView(Context context, boolean isCenterView) {
+			return new DayTimeLayoutView(context, isCenterView,30,8,0.8f);
 		}
 		
 	};

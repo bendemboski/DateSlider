@@ -20,12 +20,13 @@ package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.googlecode.android.widgets.DateSlider.TimeView.DayTimeLayoutView;
+import com.googlecode.android.widgets.DateSlider.TimeView.TimeLayoutView;
 
 public class DefaultDateSlider extends DateSlider {
 	
@@ -156,61 +157,4 @@ public class DefaultDateSlider extends DateSlider {
 		}
 		
 	};
-	
-	public static class DayTimeLayoutView extends TimeLayoutView {
-
-		protected boolean isSunday=false;
-		
-		public DayTimeLayoutView(Context context, boolean isCenterView,
-				int topTextSize, int bottomTextSize, float lineHeight) {
-			super(context, isCenterView, topTextSize, bottomTextSize, lineHeight);
-		}
-		
-		public void setVals(TimeObject to) {
-			super.setVals(to);
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(to.endTime);
-			if (c.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY && !isSunday) {
-				isSunday=true;
-				colorMeSunday();
-			} else if (isSunday && c.get(Calendar.DAY_OF_WEEK)!=Calendar.SUNDAY) {
-				isSunday=false;
-				colorMeWorkday();
-			}
-		}
-		
-		protected void colorMeSunday() {
-			if (isCenter) {
-				bottomView.setTextColor(0xFF773333);
-				topView.setTextColor(0xFF553333);
-			}
-			else {
-				bottomView.setTextColor(0xFF442222);
-				topView.setTextColor(0xFF553333);					
-			}
-		}
-		
-		protected void colorMeWorkday() {
-			if (isCenter) {
-				topView.setTextColor(0xFF333333);
-				bottomView.setTextColor(0xFF444444);
-			} else {
-				topView.setTextColor(0xFF666666);
-				bottomView.setTextColor(0xFF666666);					
-			}			
-		}
-		
-		public void setVals(TimeView other) {
-			super.setVals(other);
-			DayTimeLayoutView otherDay = (DayTimeLayoutView) other;
-			if (otherDay.isSunday && !isSunday) {
-				isSunday = true;
-				colorMeSunday();
-			} else if (isSunday && !otherDay.isSunday) {
-				isSunday = false;
-				colorMeWorkday();
-			}
-		}
-		
-	}
 }

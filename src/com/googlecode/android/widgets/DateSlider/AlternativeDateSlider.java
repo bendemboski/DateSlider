@@ -21,12 +21,12 @@ package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.googlecode.android.widgets.DateSlider.TimeView.DayTimeLayoutView;
 
 public class AlternativeDateSlider extends DateSlider {
 	
@@ -55,7 +55,7 @@ public class AlternativeDateSlider extends DateSlider {
 		
 		// create the year scroller and assign its labeler and add it to the layout
 		ScrollLayout mYearScroller = (ScrollLayout) inflater.inflate(R.layout.scroller, null);
-		mYearScroller.setLabeler(yearLabeler, mTime.getTimeInMillis(),200,60);
+		mYearScroller.setLabeler(yearLabeler, mTime.getTimeInMillis(),180,60);
 		mLayout.addView(mYearScroller, 0,lp);
 		mScrollerList.add(mYearScroller);
 		
@@ -67,7 +67,7 @@ public class AlternativeDateSlider extends DateSlider {
 		
 		// create the month scroller and assign its labeler and add it to the layout
 		ScrollLayout mDayScroller = (ScrollLayout) inflater.inflate(R.layout.scroller, null);
-		mDayScroller.setLabeler(dayLabeler, mTime.getTimeInMillis(),60,60);
+		mDayScroller.setLabeler(dayLabeler, mTime.getTimeInMillis(),45,60);
 		mLayout.addView(mDayScroller, 2, lp);
 		mScrollerList.add(mDayScroller);
 		
@@ -177,7 +177,15 @@ public class AlternativeDateSlider extends DateSlider {
 			c.set(year, month, day, 23, 59, 59);
 			c.set(Calendar.MILLISECOND, 999);
 			long endTime = c.getTimeInMillis();
-			return new TimeObject(String.format("%td",c,c), startTime, endTime);
+			return new TimeObject(String.format("%td %ta",c,c), startTime, endTime);
+		}
+		
+		@Override
+		/**
+		 * rather than a standard TextView this is returning a LimearLayout with two TextViews
+		 */
+		public TimeView createView(Context context, boolean isCenterView) {
+			return new DayTimeLayoutView(context, isCenterView,30,8,0.8f);
 		}
 		
 	};

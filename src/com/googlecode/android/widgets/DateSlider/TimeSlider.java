@@ -54,7 +54,7 @@ public class TimeSlider extends DateSlider {
 		
 		// create the minute scroller and assign its labeler and add it to the layout
 		ScrollLayout mMinuteScroller = (ScrollLayout) inflater.inflate(R.layout.scroller, null);
-		mMinuteScroller.setLabeler(minuteLabeler, mTime.getTimeInMillis(),50,60);
+		mMinuteScroller.setLabeler(minuteLabeler, mTime.getTimeInMillis(),45,60);
 		mLayout.addView(mMinuteScroller, 1,lp);
 		mScrollerList.add(mMinuteScroller);
 		

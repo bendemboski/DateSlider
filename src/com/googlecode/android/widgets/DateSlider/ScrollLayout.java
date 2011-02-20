@@ -18,8 +18,6 @@
 
 package com.googlecode.android.widgets.DateSlider;
 
-import com.googlecode.android.widgets.DateSlider.DateSlider.TimeView;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;

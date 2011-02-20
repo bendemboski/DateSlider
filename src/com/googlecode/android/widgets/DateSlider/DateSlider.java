@@ -23,19 +23,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.googlecode.android.widgets.DateSlider.TimeView.TimeTextView;
 
 public abstract class DateSlider extends Dialog {
 
@@ -210,132 +207,4 @@ public abstract class DateSlider extends Dialog {
 			this.endTime = endTime;
 		}
 	}
-	
-	/**
-	 * This class is used to represent a time unit visually 
-	 *
-	 */
-	public interface TimeView {
-		public void setVals(TimeObject to);
-		public void setVals(TimeView other);
-		public String getTimeText();
-		public long getStartTime();public long getEndTime();
-		
-	}
-	
-	public static class TimeTextView extends TextView implements TimeView {
-		private long endTime, startTime;
-		public TimeTextView(Context context, boolean isCenterView, int textSize) {
-			super(context);
-			setupView(isCenterView, textSize);
-		}
-	
-		/**
-		 * this method should be overwritten by inheriting classes to define its own look and feel
-		 * @param isCenterView
-		 */	
-		protected void setupView(boolean isCenterView, int textSize) {
-			setGravity(Gravity.CENTER);
-			setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-			if (isCenterView) {
-				setTypeface(Typeface.DEFAULT_BOLD);
-				setTextColor(0xFF333333);
-			} else {
-				setTextColor(0xFF666666);
-			}
-		}
-		public void setVals(DateSlider.TimeObject to) {
-			setText(to.text);
-			this.startTime = to.startTime;
-			this.endTime = to.endTime;
-		}
-		
-		public void setVals(TimeView other) {
-			setText(other.getTimeText());
-			startTime = other.getStartTime();
-			endTime = other.getEndTime();
-		}
-
-		public long getStartTime() {
-			return this.startTime;
-		}
-
-		public long getEndTime() {
-			return this.endTime;
-		}
-
-		public String getTimeText() {
-			return getText().toString();
-		}
-	}
-	
-	public static class TimeLayoutView extends LinearLayout implements TimeView {
-		protected long endTime, startTime;
-		protected String text;
-		protected boolean isCenter=false;
-		protected TextView topView, bottomView;
-		public TimeLayoutView(Context context, boolean isCenterView, int topTextSize, int bottomTextSize, float lineHeight) {
-			super(context);
-			setupView(context, isCenterView, topTextSize, bottomTextSize, lineHeight);
-		}
-		
-		protected void setupView(Context context, boolean isCenterView, int topTextSize, int bottomTextSize, float lineHeight) {
-			setOrientation(VERTICAL);
-			topView = new TextView(context);
-			topView.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-			topView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, topTextSize);
-			bottomView = new TextView(context);
-			bottomView.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.TOP);
-			bottomView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, bottomTextSize);
-			topView.setLineSpacing(0, lineHeight);
-			if (isCenterView) {
-				isCenter = true;
-				topView.setTypeface(Typeface.DEFAULT_BOLD);
-				topView.setTextColor(0xFF333333);
-				bottomView.setTypeface(Typeface.DEFAULT_BOLD);
-				bottomView.setTextColor(0xFF444444);
-				topView.setPadding(0, 5-(int)(topTextSize/15.0), 0, 0);
-			} else {
-				topView.setPadding(0, 5, 0, 0);
-				topView.setTextColor(0xFF666666);
-				bottomView.setTextColor(0xFF666666);
-			}
-			addView(topView);addView(bottomView);
-			
-		}
-
-		public void setVals(TimeObject to) {
-			text = to.text.toString();
-			setText();
-			this.startTime = to.startTime;
-			this.endTime = to.endTime;
-		}
-		
-		public void setVals(TimeView other) {
-			text = other.getTimeText().toString();
-			setText();
-			startTime = other.getStartTime();
-			endTime = other.getEndTime();			
-		}
-		
-		protected void setText() {
-			String[] splitTime = text.split(" ");
-			topView.setText(splitTime[0]);
-			bottomView.setText(splitTime[1]);
-		}
-
-		public String getTimeText() {
-			return text;
-		}
-
-		public long getStartTime() {
-			return startTime;
-		}
-
-		public long getEndTime() {
-			return endTime;
-		}
-		
-	}
-
 }

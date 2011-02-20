@@ -21,8 +21,6 @@ package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,6 +28,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.googlecode.android.widgets.DateSlider.TimeView.TimeTextView;
 
 public class CustomDateSlider extends DateSlider {
 
@@ -203,7 +203,7 @@ public class CustomDateSlider extends DateSlider {
 	/**
 	 * Here we define our Custom TimeTextView which will display the fonts in its very own way.
 	 */
-	private static class CustomTimeTextView extends DateSlider.TimeTextView {
+	private static class CustomTimeTextView extends TimeTextView {
 
 		public CustomTimeTextView(Context context, boolean isCenterView, int textSize) {
 			super(context, isCenterView, textSize);
