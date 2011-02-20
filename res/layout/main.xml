@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<TextView  
+    android:layout_height="wrap_content" 
+    android:text="Click one of the buttons to select a date/time."
+    android:layout_gravity="center" android:layout_width="wrap_content"/>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DefaultDate" android:id="@+id/defaultDateSelectButton"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select AlternativeDate" android:id="@+id/alternativeDateSelectButton"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select CustomDate" android:id="@+id/customDateSelectButton"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select Month/Year" android:id="@+id/monthYearDateSelectButton"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select Time" android:id="@+id/timeSelectButton"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DateTime" android:id="@+id/dateTimeSelectButton"></Button>
+<TextView android:id="@+id/selectedDateLabel" android:gravity="center" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_centerInParent="true" android:textSize="25dp"></TextView>
+</LinearLayout>

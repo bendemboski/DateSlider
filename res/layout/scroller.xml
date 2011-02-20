@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.googlecode.android.widgets.DateSlider.ScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="@drawable/slider_nosnap"
+    android:paddingLeft="7px"
+    android:paddingRight="7px"> 
+</com.googlecode.android.widgets.DateSlider.ScrollLayout>
