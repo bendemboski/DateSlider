@@ -68,7 +68,7 @@ public class TimeSlider extends DateSlider {
 	
 			@Override
 			public TimeObject add(long time, int val) {
-				Calendar c = Calendar.getInstance();
+				Calendar c = Calendar.getInstance(mTimeZone);
 				c.setTimeInMillis(time);
 				c.add(Calendar.HOUR_OF_DAY, val);
 				return timeObjectfromCalendar(c);
@@ -98,7 +98,7 @@ public class TimeSlider extends DateSlider {
 	
 			@Override
 			public TimeObject add(long time, int val) {
-				Calendar c = Calendar.getInstance();
+				Calendar c = Calendar.getInstance(mTimeZone);
 				c.setTimeInMillis(time);
 				c.add(Calendar.MINUTE, val);
 				return timeObjectfromCalendar(c);

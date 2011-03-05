@@ -21,8 +21,6 @@ package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;

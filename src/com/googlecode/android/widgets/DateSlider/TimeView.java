@@ -223,6 +223,7 @@ public interface TimeView {
 
 		public void setVals(TimeObject to) {
 			super.setVals(to);
+			// TODO: make it timeZone dependent!
 			Calendar c = Calendar.getInstance();
 			c.setTimeInMillis(to.endTime);
 			if (c.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY && !isSunday) {

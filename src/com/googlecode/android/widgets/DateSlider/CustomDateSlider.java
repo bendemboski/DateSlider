@@ -82,7 +82,7 @@ public class CustomDateSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.YEAR, val);
 			return timeObjectfromCalendar(c);
@@ -116,7 +116,7 @@ public class CustomDateSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.WEEK_OF_YEAR, val);
 			return timeObjectfromCalendar(c);
@@ -161,7 +161,7 @@ public class CustomDateSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.DAY_OF_MONTH, val);
 			return timeObjectfromCalendar(c);

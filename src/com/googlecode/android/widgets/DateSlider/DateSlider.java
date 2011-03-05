@@ -22,6 +22,7 @@ package com.googlecode.android.widgets.DateSlider;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -40,6 +41,7 @@ public abstract class DateSlider extends Dialog {
 	
 	protected OnDateSetListener onDateSetListener;
 	protected Calendar mTime;
+	protected TimeZone mTimeZone;
 	protected TextView mTitleText;
 	protected List<ScrollLayout> mScrollerList = new ArrayList<ScrollLayout>();
 	protected LinearLayout mLayout;
@@ -47,9 +49,12 @@ public abstract class DateSlider extends Dialog {
 	public DateSlider(Context context, OnDateSetListener l, Calendar calendar) {
 		super(context);
 		this.onDateSetListener = l;
-		mTime = Calendar.getInstance();
+		mTimeZone = calendar.getTimeZone();
+		mTime = Calendar.getInstance(mTimeZone);
 		mTime.setTimeInMillis(calendar.getTimeInMillis());
 	}
+	
+	
 	
 	/**
 	 * Set up the dialog with all the views and their listeners
@@ -77,6 +82,18 @@ public abstract class DateSlider extends Dialog {
 		cancelButton.setOnClickListener(cancelButtonClickListener);
 		
 		arrangeScroller(null);
+	}
+	
+	/**
+	 * This method allows to change the displayed time of the slider(s).
+	 * this can be handy if you need to invoke the dialog several times
+	 * using OnPrepareDialog.
+	 * @param calendar the calendar object containing the new time
+	 */
+	public void updateCalendar(Calendar calendar) {
+		mTimeZone = calendar.getTimeZone();
+		mTime = Calendar.getInstance(mTimeZone);
+		mTime.setTimeInMillis(calendar.getTimeInMillis());
 	}
 	
 	private android.view.View.OnClickListener okButtonClickListener = new android.view.View.OnClickListener() {
@@ -162,8 +179,8 @@ public abstract class DateSlider extends Dialog {
 		 * @param time
 		 * @return the TimeObject representing "time"
 		 */
-		public TimeObject getElem(long time) { 
-			Calendar c = Calendar.getInstance();
+		public TimeObject getElem(long time) {
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			return timeObjectfromCalendar(c);
 		}

@@ -81,7 +81,7 @@ public class DateTimeSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.MONTH, val);
 			return timeObjectfromCalendar(c);
@@ -125,7 +125,7 @@ public class DateTimeSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.DAY_OF_MONTH, val);
 			return timeObjectfromCalendar(c);
@@ -169,7 +169,7 @@ public class DateTimeSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject add(long time, int val) {
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.add(Calendar.MINUTE, val*MINUTEINTERVAL);
 			return timeObjectfromCalendar(c);
@@ -180,7 +180,7 @@ public class DateTimeSlider extends DateSlider {
 		 */
 		@Override
 		public TimeObject getElem(long time) { 
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(mTimeZone);
 			c.setTimeInMillis(time);
 			c.set(Calendar.MINUTE, c.get(Calendar.MINUTE)/MINUTEINTERVAL*MINUTEINTERVAL);
 			Log.v("GETELEM","getelem: "+c.get(Calendar.MINUTE));
