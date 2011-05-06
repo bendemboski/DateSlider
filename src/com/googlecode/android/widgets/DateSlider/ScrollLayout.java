@@ -199,6 +199,7 @@ public class ScrollLayout extends LinearLayout {
         // Now scroll to that offset
         super.scrollTo(mInitialOffset, 0);
         mScrollX = mInitialOffset;
+        mLastScroll = mInitialOffset;
         setTime(currentTime,0);
     }
 
