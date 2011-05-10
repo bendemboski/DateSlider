@@ -33,9 +33,10 @@ public class DateTimeSlider extends DateSlider {
     @Override
     protected void setTitle() {
         if (mTitleText != null) {
-            int minute = mTime.get(Calendar.MINUTE)/TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
+            final Calendar c = getTime();
+            int minute = c.get(Calendar.MINUTE)/TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
             mTitleText.setText(String.format("Selected DateTime: %te/%tm/%ty %tH:%02d",
-                    mTime,mTime,mTime,mTime,minute));
+                    c,c,c,c,minute));
         }
     }
 }

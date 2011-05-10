@@ -49,6 +49,7 @@ public class SliderContainer extends LinearLayout {
      */
     public void setTime(Calendar calendar) {
         mTime.setTimeInMillis(calendar.getTimeInMillis());
+        mTime.setTimeZone(calendar.getTimeZone());
         arrangeScrollers(null);
     }
 

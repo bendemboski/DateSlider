@@ -41,17 +41,17 @@ public class DateSlider extends Dialog {
 //	private static String TAG = "DATESLIDER";
 
     protected OnDateSetListener onDateSetListener;
-    protected Calendar mTime;
+    protected Calendar mInitialTime;
     protected int mLayoutID;
     protected TextView mTitleText;
     protected SliderContainer mContainer;
 
     public DateSlider(Context context, int layoutID, OnDateSetListener l,
-            Calendar calendar) {
+            Calendar initialTime) {
         super(context);
         this.onDateSetListener = l;
-        mTime = Calendar.getInstance();
-        mTime.setTimeInMillis(calendar.getTimeInMillis());
+        mInitialTime = Calendar.getInstance(initialTime.getTimeZone());
+        mInitialTime.setTimeInMillis(initialTime.getTimeInMillis());
         mLayoutID = layoutID;
     }
 
@@ -63,8 +63,10 @@ public class DateSlider extends Dialog {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState!=null) {
-            long time = savedInstanceState.getLong("time", mTime.getTimeInMillis());
-            mTime.setTimeInMillis(time);
+            Calendar c = (Calendar)savedInstanceState.getSerializable("time");
+            if (c != null) {
+                mInitialTime = c;
+            }
         }
 
         this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -75,6 +77,7 @@ public class DateSlider extends Dialog {
         mContainer = (SliderContainer) this.findViewById(R.id.dateSliderContainer);
 
         mContainer.setOnTimeChangeListener(onTimeChangeListener);
+        mContainer.setTime(mInitialTime);
 
         Button okButton = (Button) findViewById(R.id.dateSliderOkButton);
         okButton.setOnClickListener(okButtonClickListener);
@@ -83,10 +86,14 @@ public class DateSlider extends Dialog {
         cancelButton.setOnClickListener(cancelButtonClickListener);
     }
 
+    public void setTime(Calendar c) {
+        mContainer.setTime(c);
+    }
+
     private android.view.View.OnClickListener okButtonClickListener = new android.view.View.OnClickListener() {
         public void onClick(View v) {
             if (onDateSetListener!=null)
-                onDateSetListener.onDateSet(DateSlider.this, mTime);
+                onDateSetListener.onDateSet(DateSlider.this, getTime());
             dismiss();
         }
     };
@@ -100,7 +107,6 @@ public class DateSlider extends Dialog {
     private OnTimeChangeListener onTimeChangeListener = new OnTimeChangeListener() {
         @Override
         public void onTimeChange(Calendar time) {
-            mTime.setTimeInMillis(time.getTimeInMillis());
             setTitle();
         }
     };
@@ -109,8 +115,15 @@ public class DateSlider extends Dialog {
     public Bundle onSaveInstanceState() {
         Bundle savedInstanceState = super.onSaveInstanceState();
         if (savedInstanceState==null) savedInstanceState = new Bundle();
-        savedInstanceState.putLong("time", mTime.getTimeInMillis());
+        savedInstanceState.putSerializable("time", getTime());
         return savedInstanceState;
+    }
+
+    /**
+     * @return The currently displayed time
+     */
+    protected Calendar getTime() {
+        return mContainer.getTime();
     }
 
     /**
@@ -118,8 +131,9 @@ public class DateSlider extends Dialog {
      */
     protected void setTitle() {
         if (mTitleText != null) {
+            final Calendar c = getTime();
             mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
-                    String.format(": %te. %tB %tY", mTime,mTime,mTime));
+                    String.format(": %te. %tB %tY", c, c, c));
         }
     }
 

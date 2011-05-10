@@ -35,8 +35,9 @@ public class CustomDateSlider extends DateSlider {
     @Override
     protected void setTitle() {
         if (mTitleText != null) {
+            final Calendar c = getTime();
             mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
-                    String.format(": %tA, %te/%tm/%ty",mTime, mTime, mTime,mTime));
+                    String.format(": %tA, %te/%tm/%ty", c, c, c, c));
         }
     }
 }

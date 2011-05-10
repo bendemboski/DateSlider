@@ -34,8 +34,9 @@ public class MonthYearDateSlider extends DateSlider {
     @Override
     protected void setTitle() {
         if (mTitleText != null) {
+            final Calendar c = getTime();
             mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
-                    String.format(": %tB %tY",mTime,mTime));
+                    String.format(": %tB %tY",c,c));
         }
     }
 
