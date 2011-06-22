@@ -24,8 +24,12 @@ import android.content.Context;
 
 public class MonthYearDateSlider extends DateSlider {
 
-    public MonthYearDateSlider(Context context, OnDateSetListener l, Calendar calendar) {
-        super(context, R.layout.monthyeardateslider, l, calendar);
+	public MonthYearDateSlider(Context context, OnDateSetListener l, Calendar calendar) {
+		this(context, l, calendar, null, null);
+	}
+    public MonthYearDateSlider(Context context, OnDateSetListener l, Calendar calendar, 
+    		Calendar minDate, Calendar maxDate) {
+        super(context, R.layout.monthyeardateslider, l, calendar, minDate, maxDate);
     }
 
     /**

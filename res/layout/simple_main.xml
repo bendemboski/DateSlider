@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<TextView  
+    android:layout_height="wrap_content" 
+    android:text="Click the button to select a date"
+    android:layout_gravity="center" android:layout_width="wrap_content"/>
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DefaultDate" android:id="@+id/defaultDateSelectButton"></Button>
+<TextView android:id="@+id/selectedDateLabel" android:gravity="center" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_centerInParent="true" android:textSize="25dp"></TextView>
+</LinearLayout>

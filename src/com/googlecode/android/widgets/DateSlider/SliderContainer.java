@@ -150,10 +150,9 @@ public class SliderContainer extends LinearLayout {
 
         if (mOnTimeChangeListener != null) {
         	if (minuteInterval>1) {
-        		// rounds the minutes to the closest multiple of minuteInterval
-        		int minutes = mTime.get(Calendar.MINUTE);
-        		int diff = ((minutes+minuteInterval/2)/minuteInterval)*minuteInterval - minutes;
-        		mTime.add(Calendar.MINUTE, diff);
+        		int minute = mTime.get(Calendar.MINUTE)/minuteInterval*minuteInterval;
+        		
+        		mTime.set(Calendar.MINUTE, minute);
         	}
             mOnTimeChangeListener.onTimeChange(mTime);
         }

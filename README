@@ -18,7 +18,9 @@
 What is DateSlider ?
 ====================
 
-It is a android widget which can be used exactly like the default DatePicker Dialog but present a neater interface
+It is an android dialog which can be used in a similar way to the default DatePicker or TimePicker
+dialog. Its main advantages are a slide based interface and features such as a minimum or maximum
+date, or a minute interval for the time picker variant 
 
 
 How To Install
@@ -28,24 +30,68 @@ in the files you can find a sample application (i.e. activity) which
 implements the DateSlider. Just copy the relevant files into your project
 and you should be ready to go!
 
-The relevant files are:
+The relevant files for the _default_ slider are:
 
-  In the src/ folder:
+  In the src/.../DateSlider folder:
    - DateSlider.java
+   - DefaultDateSlider.java
    - ScrollLayout.java
+   - ScrollContainer.java
+   - TimeObject.java
    - TimeView.java
+  
+  In the src/.../DateSlider/labeler folder:
+   - DayLabeler.java
+   - DayDateLabeler.java
+   - Labeler.java
+   - MonthLabeler.java
+   - MonthYearLabeler.java
+   - Util.java
+  
+  In the src/.../DateSlider/labeler folder:
+   - *.java (all files) 
+   
 
   In the res/ folder:
-   - drawable/slider_nosnap.png
-   - layout/dateslider.xml
+   - drawable/*.xml
+   - layout/defaultdateslider.xml
+   - layout/dialogbuttons.xml
    - layout/dialogtitle.xml
-   - layout/scroller.xml
-   - values/strings.xml
+   - values/*.xml
 
-moreover you can use any of the DateSlider implementations you will find in the src/ folder.
+If you want to use any other dateslider implementation just follow the dependencies. (I hope the
+names of the files should give some clues about whether or not they are needed for a certain
+implementation)
+
+Changes
+=========
+
+1.1
+---------
+the core algorithm was rewritten from scratch to make it faster, smoother, less memory expensive and
+easier to adapt
+
+1.1.2
+- - - - -
+added a setTime() method to update the time after the dialog has been first invoked
+fixed a bug which occurred when dealing with time zones other than the default time zone 
+
+1.2
+---------
+A massive thanks to [Ben Demboski] who spend a lot of invaluable work in refactoring this project. 
+He made some big changes in the code base to make it very easy to expand and modify the dateslider's 
+look and behaviour.
+
+now the dateslider supports time ranges which can be open
+
+it's straight forward to incorporate a minute interval such that only multiples of this interval
+are displayed.
+
+the designed was refined. It is now based on an xml file and shadows at the border were included 
 
 
 Feedback
 ========
 
-Further feedback is highly appreciated and can be sent to < daniel@codeus.net > . And please let me know whether the DateSlider makes it into your application!
+Further feedback is highly appreciated and can be sent to < daniel@codeus.net > . 
+And please let me know whether the DateSlider makes it into your application!

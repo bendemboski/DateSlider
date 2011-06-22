@@ -26,8 +26,13 @@ import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
 
 public class DateTimeSlider extends DateSlider {
 
-    public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar) {
-        super(context, R.layout.datetimeslider, l, calendar);
+	public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar) {
+		this(context, l, calendar, null, null);
+	}
+	
+    public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar, 
+    		Calendar minDate, Calendar maxDate) {
+        super(context, R.layout.datetimeslider, l, calendar, minDate, maxDate);
     }
 
     @Override
