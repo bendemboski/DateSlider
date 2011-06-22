@@ -17,12 +17,16 @@ public class MinuteLabeler extends Labeler {
 
     @Override
     public TimeObject add(long time, int val) {
-        return timeObjectfromCalendar(Util.addMinutes(time, val));
+        return timeObjectfromCalendar(Util.addMinutes(time, val, minuteInterval));
     }
 
     @Override
     protected TimeObject timeObjectfromCalendar(Calendar c) {
-        return Util.getMinute(c, mFormatString);
+    	if (minuteInterval>1) {
+    		int minutes = c.get(Calendar.MINUTE);
+    		c.set(Calendar.MINUTE, minutes-(minutes%minuteInterval));
+    	}
+        return Util.getMinute(c, mFormatString, minuteInterval);
     }
 
 }

@@ -19,7 +19,7 @@ import com.googlecode.android.widgets.DateSlider.TimeObject;
 public class TimeLayoutView extends LinearLayout implements TimeView {
     protected long endTime, startTime;
     protected String text;
-    protected boolean isCenter=false;
+    protected boolean isCenter=false, isOutOfBounds=false;
     protected TextView topView, bottomView;
 
     /**
@@ -69,7 +69,7 @@ public class TimeLayoutView extends LinearLayout implements TimeView {
 
     }
 
-    @Override
+    
     public void setVals(TimeObject to) {
         text = to.text.toString();
         setText();
@@ -77,7 +77,7 @@ public class TimeLayoutView extends LinearLayout implements TimeView {
         this.endTime = to.endTime;
     }
 
-    @Override
+    
     public void setVals(TimeView other) {
         text = other.getTimeText().toString();
         setText();
@@ -94,19 +94,35 @@ public class TimeLayoutView extends LinearLayout implements TimeView {
         bottomView.setText(splitTime[1]);
     }
 
-    @Override
+    
     public String getTimeText() {
         return text;
     }
 
-    @Override
+    
     public long getStartTime() {
         return startTime;
     }
 
-    @Override
+    
     public long getEndTime() {
         return endTime;
     }
+
+	public boolean isOutOfBounds() {
+		return isOutOfBounds;
+	}
+
+	public void setOutOfBounds(boolean outOfBounds) {
+		if (outOfBounds && !isOutOfBounds) {
+			topView.setTextColor(0x44666666);
+            bottomView.setTextColor(0x44666666);
+		}
+		else if (!outOfBounds && isOutOfBounds) {
+            topView.setTextColor(0xFF666666);
+            bottomView.setTextColor(0xFF666666);
+		}
+		isOutOfBounds = outOfBounds;
+	}
 
 }

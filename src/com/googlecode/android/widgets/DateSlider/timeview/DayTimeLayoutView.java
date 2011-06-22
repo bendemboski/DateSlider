@@ -45,6 +45,7 @@ public class DayTimeLayoutView extends TimeLayoutView {
      * this method is called when the current View takes a Sunday as time unit
      */
     protected void colorMeSunday() {
+    	if (isOutOfBounds) return;
         if (isCenter) {
             bottomView.setTextColor(0xFF773333);
             topView.setTextColor(0xFF553333);
@@ -60,6 +61,7 @@ public class DayTimeLayoutView extends TimeLayoutView {
      * this method is called when the current View takes no Sunday as time unit
      */
     protected void colorMeWorkday() {
+    	if (isOutOfBounds) return;
         if (isCenter) {
             topView.setTextColor(0xFF333333);
             bottomView.setTextColor(0xFF444444);

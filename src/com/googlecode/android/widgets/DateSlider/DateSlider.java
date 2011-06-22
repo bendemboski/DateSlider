@@ -41,18 +41,40 @@ public class DateSlider extends Dialog {
 //	private static String TAG = "DATESLIDER";
 
     protected OnDateSetListener onDateSetListener;
-    protected Calendar mInitialTime;
+    protected Calendar mInitialTime, minTime, maxTime;
     protected int mLayoutID;
     protected TextView mTitleText;
     protected SliderContainer mContainer;
+    protected int minuteInterval;
 
+
+    public DateSlider(Context context, int layoutID, OnDateSetListener l, Calendar initialTime) {
+    	this(context,layoutID,l,initialTime, null, null, 1);
+    }
+    
+    public DateSlider(Context context, int layoutID, OnDateSetListener l, Calendar initialTime, int minInterval) {
+    	this(context,layoutID,l,initialTime, null, null, minInterval);
+    }
+    
     public DateSlider(Context context, int layoutID, OnDateSetListener l,
-            Calendar initialTime) {
+            Calendar initialTime, Calendar minTime, Calendar maxTime) {
+    	this(context,layoutID,l,initialTime, minTime, maxTime, 1);
+    }
+    
+    public DateSlider(Context context, int layoutID, OnDateSetListener l,
+            Calendar initialTime, Calendar minTime, Calendar maxTime, int minInterval) {
         super(context);
         this.onDateSetListener = l;
+        this.minTime = minTime; this.maxTime = maxTime;
         mInitialTime = Calendar.getInstance(initialTime.getTimeZone());
         mInitialTime.setTimeInMillis(initialTime.getTimeInMillis());
         mLayoutID = layoutID;
+        this.minuteInterval = minInterval;
+        if (minInterval>1) {
+        	int minutes = mInitialTime.get(Calendar.MINUTE);
+    		int diff = ((minutes+minuteInterval/2)/minuteInterval)*minuteInterval - minutes;
+    		mInitialTime.add(Calendar.MINUTE, diff);
+        }
     }
 
     /**
@@ -77,7 +99,10 @@ public class DateSlider extends Dialog {
         mContainer = (SliderContainer) this.findViewById(R.id.dateSliderContainer);
 
         mContainer.setOnTimeChangeListener(onTimeChangeListener);
+        mContainer.setMinuteInterval(minuteInterval);
         mContainer.setTime(mInitialTime);
+        if (minTime!=null) mContainer.setMinTime(minTime);
+        if (maxTime!=null) mContainer.setMaxTime(maxTime);
 
         Button okButton = (Button) findViewById(R.id.dateSliderOkButton);
         okButton.setOnClickListener(okButtonClickListener);
@@ -105,7 +130,7 @@ public class DateSlider extends Dialog {
     };
 
     private OnTimeChangeListener onTimeChangeListener = new OnTimeChangeListener() {
-        @Override
+
         public void onTimeChange(Calendar time) {
             setTitle();
         }

@@ -34,6 +34,10 @@ class Util {
     public static Calendar addMinutes(long time, int minutes) {
         return add(time, minutes, Calendar.MINUTE);
     }
+    
+    public static Calendar addMinutes(long time, int minutes, int minInterval) {
+        return add(time, minutes*minInterval, Calendar.MINUTE);
+    }
 
     public static TimeObject getYear(Calendar c, String formatString) {
         int year = c.get(Calendar.YEAR);
@@ -94,19 +98,23 @@ class Util {
     }
 
     public static TimeObject getMinute(Calendar c, String formatString) {
+    	return getMinute(c, formatString, 1);
+    }
+    
+    public static TimeObject getMinute(Calendar c, String formatString, int minInterval) {
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-        // get the first millisecond of that minute
+        // get the last millisecond of that minute interval (cap it at 59)
+        c.set(year, month, day, hour, Math.min(59,minute+minInterval-1), 59);
+        c.set(Calendar.MILLISECOND, 999);
+        long endTime = c.getTimeInMillis();
+        // get the first millisecond of that minute interval
         c.set(year, month, day, hour, minute, 0);
         c.set(Calendar.MILLISECOND, 0);
         long startTime = c.getTimeInMillis();
-        // get the last millisecond of that minute
-        c.set(year, month, day, hour, minute, 59);
-        c.set(Calendar.MILLISECOND, 999);
-        long endTime = c.getTimeInMillis();
         return new TimeObject(String.format(formatString, c,c), startTime, endTime);
     }
 

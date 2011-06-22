@@ -22,6 +22,8 @@ public abstract class Labeler {
      * The default height of views that this labeler generates, in dp
      */
     private final int viewHeightDP;
+    
+    protected int minuteInterval=1;
 
     /**
      * @param viewWidthDB The default width of views labeled by this labeler in dp
@@ -99,5 +101,15 @@ public abstract class Labeler {
      */
     public int getPreferredViewHeight(Context context) {
         return (int)(viewHeightDP * context.getResources().getDisplayMetrics().density);
+    }
+    
+    /**
+     * This method sets a minute interval to only show multiples of this number in any
+     * minute slider 
+     * 
+     * @param minInterval
+     */
+    public void setMinuteInterval(int minInterval) {
+    	this.minuteInterval = minInterval;
     }
 }

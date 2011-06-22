@@ -25,8 +25,17 @@ import android.content.Context;
 
 public class TimeSlider extends DateSlider {
 
-    public TimeSlider(Context context, OnDateSetListener l, Calendar calendar) {
-        super(context, R.layout.timeslider, l, calendar);
+	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar) {
+		this(context, l, calendar, null, null, 1);
+	}
+	
+	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar, int minuteInterval) {
+		this(context, l, calendar, null, null, minuteInterval);
+	}
+	
+    public TimeSlider(Context context, OnDateSetListener l, Calendar calendar, 
+    		Calendar minTime, Calendar maxTime, int minuteInterval) {
+        super(context, R.layout.timeslider, l, calendar, minTime, maxTime, minuteInterval);
     }
 
     /**

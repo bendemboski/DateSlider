@@ -22,6 +22,8 @@ import java.lang.reflect.Constructor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -76,6 +78,9 @@ public class ScrollLayout extends LinearLayout {
      * The time that we are currently displaying
      */
     private long currentTime = System.currentTimeMillis();
+    private long minTime = -1, maxTime = -1;
+    private int minuteInterval = 1;
+    
     /**
      * The width of each child
      */
@@ -84,6 +89,8 @@ public class ScrollLayout extends LinearLayout {
      * The height of each child
      */
     private int objHeight;
+    
+    private Drawable rightShadow, leftShadow;
 
     private Labeler mLabeler;
     private OnScrollListener listener;
@@ -91,6 +98,9 @@ public class ScrollLayout extends LinearLayout {
 
     public ScrollLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.setWillNotDraw(false);
+        rightShadow = getContext().getResources().getDrawable(R.drawable.right_shadow);
+        leftShadow = getContext().getResources().getDrawable(R.drawable.left_shadow);
         mScroller = new Scroller(getContext());
         setGravity(Gravity.CENTER_VERTICAL);
         setOrientation(HORIZONTAL);
@@ -173,6 +183,9 @@ public class ScrollLayout extends LinearLayout {
         // way back to the beginning.
         mCenterView = (TimeView)getChildAt(centerIndex);
         mCenterView.setVals(mLabeler.getElem(currentTime));
+        
+        
+        Log.v(TAG, "mCenter: " + mCenterView.getTimeText() + " minInterval " + minuteInterval);
 
         // TODO: Do I need to use endTime, or can I just use the point time?
         for (int i = centerIndex + 1; i < childCount; i++) {
@@ -202,21 +215,70 @@ public class ScrollLayout extends LinearLayout {
         mLastScroll = mInitialOffset;
         setTime(currentTime,0);
     }
+    
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        rightShadow.setBounds(getScrollX()+getWidth()-50, 0, getWidth()+getScrollX()+1, getHeight());
+        rightShadow.draw(canvas);
+        
+        leftShadow.setBounds(getScrollX(), 0, getScrollX()+50, getHeight());
+        leftShadow.draw(canvas);
+    }
 
+    public void setMinTime(long time) {
+    	minTime = time;
+    }
+    
+    public void setMaxTime(long time) {
+    	maxTime = time;
+    }
+    
+    
+    public void setTime(long time) {
+    	this.setTime(time, 0);
+    }
+    
+    
+    /**
+     * sets a new minuteInterval
+     * this requires us to update all the views, because they are still working with the old
+     * minuteInterval
+     * 
+     * @param minInterval
+     */
+    public void setMinuteInterval(int minInterval) {
+    	this.minuteInterval = minInterval;
+    	mLabeler.setMinuteInterval(minInterval);
+    	if (minInterval>1) {
+    		final int centerIndex = (getChildCount() / 2);
+            for (int i = centerIndex + 1; i < getChildCount(); i++) {
+                TimeView lastView = (TimeView)getChildAt(i - 1);
+                TimeView thisView = (TimeView)getChildAt(i);
+                thisView.setVals(mLabeler.add(lastView.getEndTime(), 1));
+            }
+            for (int i = centerIndex - 1; i >= 0; i--) {
+                TimeView lastView = (TimeView)getChildAt(i + 1);
+                TimeView thisView = (TimeView)getChildAt(i);
+                thisView.setVals(mLabeler.add(lastView.getEndTime(), -1));
+            }
+    	}
+    }
+    
     /**
      * this element will position the TimeTextViews such that they correspond to the given time
      * @param time
      * @param loops prevents setTime getting called too often, if loop is > 2 the procedure will be
      * stopped
      */
-    public void setTime(long time, int loops) {
+    private void setTime(long time, int loops) {
         currentTime = time;
         if (!mScroller.isFinished()) mScroller.abortAnimation();
         int pos = getChildCount()/2;
         TimeView currelem = (TimeView)getChildAt(pos);
         if (loops>2 || currelem.getStartTime() <= time && currelem.getEndTime() >= time) {
             if (loops>2) {
-                Log.d(TAG,String.format("time: %d, start: %d, end: %d", time, currelem.getStartTime(), currelem.getStartTime()));
+                Log.d(TAG,String.format("time: %d, start: %d, end: %d", time, currelem.getStartTime(), currelem.getEndTime()));
                 return;
             }
             double center = getWidth()/2.0;
@@ -266,10 +328,48 @@ public class ScrollLayout extends LinearLayout {
      * @param notify if false, the listeners won't be called
      */
     protected void reScrollTo(int x, int y, boolean notify) {
-        int scrollX = getScrollX();
+    	if (notify) Log.d(TAG,String.format("scroll to " + x));
+    	int scrollX = getScrollX();
+    	int scrollDiff = x - mLastScroll;
+    	
+    	// estimate whether we are going to reach the lower limit
+    	if (minTime!=-1 && notify && scrollDiff<0) {
+            double center = getWidth()/2.0;
+            int left = (getChildCount()/2)*objWidth-scrollX;
+            double f = (center-left)/objWidth;
+            
+    		long esp_time = (long) (mCenterView.getStartTime() + (f - ((double)-scrollDiff)/objWidth) * (mCenterView.getEndTime() - mCenterView.getStartTime()));
+    		
+    		// if we reach it, prevent surpassing it
+    		if (esp_time<minTime) {
+	    		int deviation = scrollDiff - (int) Math.round(((double) (currentTime - minTime))/(currentTime - esp_time) * scrollDiff);
+	    		mScrollX -= deviation;
+	    		x -= deviation;
+	    		scrollDiff -= deviation;
+	    		if (!mScroller.isFinished()) mScroller.abortAnimation();
+    		}
+    	}
+    	// estimate whether we are going to reach the upper limit
+    	else if (maxTime!=-1 && notify && scrollDiff>0) {
+    		double center = getWidth()/2.0;
+            int left = (getChildCount()/2)*objWidth-scrollX;
+            double f = (center-left)/objWidth;
+            
+    		long esp_time = (long) (mCenterView.getStartTime() + (f - ((double)-scrollDiff)/objWidth) * (mCenterView.getEndTime() - mCenterView.getStartTime()));
+    		
+    		// if we reach it, prevent surpassing it
+    		if (esp_time>maxTime) {
+	    		int deviation = scrollDiff - (int) Math.round(((double) (currentTime - maxTime))/(currentTime - esp_time) * scrollDiff);
+	    		mScrollX -= deviation;
+	    		x -= deviation;
+	    		scrollDiff -= deviation;
+	    		if (!mScroller.isFinished()) mScroller.abortAnimation();
+    		}
+    	}    	
+        
         if (getChildCount()>0) {
             // Determine the absolute x-value for where we are being asked to scroll
-            scrollX += x - mLastScroll;
+            scrollX += scrollDiff;
             // If we've scrolled more than half of a view width in either direction, then
             // a different time is the "current" time, and we need to shuffle our views around.
             // Each additional full view's width on top of the initial half view's width is
@@ -292,12 +392,13 @@ public class ScrollLayout extends LinearLayout {
         }
         super.scrollTo(scrollX,y);
         if (listener!=null && notify) {
-
             double center = getWidth()/2.0;
             int left = (getChildCount()/2)*objWidth-scrollX;
             double f = (center-left)/objWidth;
-            long newTime = (long)(mCenterView.getStartTime()+(mCenterView.getEndTime()-mCenterView.getStartTime())*f);
-            listener.onScroll(newTime);
+            currentTime = (long)(mCenterView.getStartTime()+(mCenterView.getEndTime()-mCenterView.getStartTime())*f);
+            if (notify) Log.d(TAG,String.format("real time " + currentTime));
+            if (notify) Log.d(TAG,String.format(""));
+            listener.onScroll(currentTime);
         };
         mLastScroll = x;
     }
@@ -345,6 +446,13 @@ public class ScrollLayout extends LinearLayout {
                 tv.setVals((TimeView)getChildAt(index));
             } else {
                 tv.setVals(mLabeler.add(tv.getEndTime(), -steps));
+            }
+            if (minTime != -1 && tv.getEndTime() < minTime) {
+            	if (!tv.isOutOfBounds()) tv.setOutOfBounds(true);
+            } else if (maxTime != -1 && tv.getStartTime() > maxTime) {
+            	if (!tv.isOutOfBounds()) tv.setOutOfBounds(true);
+            } else if (tv.isOutOfBounds()) {
+            	tv.setOutOfBounds(false);
             }
         }
     }

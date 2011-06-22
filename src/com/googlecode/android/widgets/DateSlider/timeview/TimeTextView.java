@@ -15,7 +15,8 @@ import com.googlecode.android.widgets.DateSlider.TimeObject;
  * that it is currently selected.
  */
 public class TimeTextView extends TextView implements TimeView {
-    private long endTime, startTime;
+    protected long endTime, startTime;
+    protected boolean isOutOfBounds = false;
 
     /**
      * constructor
@@ -44,32 +45,46 @@ public class TimeTextView extends TextView implements TimeView {
         }
     }
 
-    @Override
+    
     public void setVals(TimeObject to) {
         setText(to.text);
         this.startTime = to.startTime;
         this.endTime = to.endTime;
     }
 
-    @Override
+    
     public void setVals(TimeView other) {
         setText(other.getTimeText());
         startTime = other.getStartTime();
         endTime = other.getEndTime();
     }
-
-    @Override
+    
     public long getStartTime() {
         return this.startTime;
     }
 
-    @Override
+    
     public long getEndTime() {
         return this.endTime;
     }
 
-    @Override
+    
     public String getTimeText() {
         return getText().toString();
     }
+
+	public boolean isOutOfBounds() {
+		return isOutOfBounds;
+	}
+
+	public void setOutOfBounds(boolean outOfBounds) {
+		if (outOfBounds && !isOutOfBounds) {
+			setTextColor(0x44666666);
+		}
+		else if (!outOfBounds && isOutOfBounds) {
+            setTextColor(0xFF666666);
+		}
+		isOutOfBounds = outOfBounds;
+	}
+
 }

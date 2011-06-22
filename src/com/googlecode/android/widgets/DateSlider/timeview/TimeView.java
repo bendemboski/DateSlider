@@ -41,6 +41,7 @@ public interface TimeView {
      * @param other The TimeView to copy values from
      */
     public void setVals(TimeView other);
+    
     /**
      * Get a string containing the textual representation of this TimeView's time
      * @return
@@ -56,4 +57,7 @@ public interface TimeView {
      * @return
      */
     public long getEndTime();
+    
+    public boolean isOutOfBounds();
+    public void setOutOfBounds(boolean outOfBounds);
 }

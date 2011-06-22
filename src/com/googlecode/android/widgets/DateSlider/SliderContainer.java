@@ -16,8 +16,9 @@ import android.widget.LinearLayout;
  * observer anytime the time is changed.
  */
 public class SliderContainer extends LinearLayout {
-    private Calendar mTime = Calendar.getInstance();
+    private Calendar mTime = null;
     private OnTimeChangeListener mOnTimeChangeListener;
+    private int minuteInterval;
 
     public SliderContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,11 +49,11 @@ public class SliderContainer extends LinearLayout {
      * @param calendar
      */
     public void setTime(Calendar calendar) {
+    	mTime = Calendar.getInstance(calendar.getTimeZone());
         mTime.setTimeInMillis(calendar.getTimeInMillis());
-        mTime.setTimeZone(calendar.getTimeZone());
         arrangeScrollers(null);
     }
-
+    
     /**
      * Get the current time
      *
@@ -60,6 +61,61 @@ public class SliderContainer extends LinearLayout {
      */
     public Calendar getTime() {
         return mTime;
+    }
+    
+    
+    /**
+     * sets the minimum date that the scroller can scroll
+     * 
+     * @param c the minimum date (inclusiv)
+     */
+    public void setMinTime(Calendar c) {
+    	if (mTime==null) {
+    		throw new RuntimeException("You have to call setTime before setting a MinimumTime!");
+    	}
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View v = getChildAt(i);
+            if (v instanceof ScrollLayout) {
+                ScrollLayout scroller = (ScrollLayout)v;
+                scroller.setMinTime(c.getTimeInMillis());
+            }
+        }
+    }
+    
+    /**
+     * sets the maximum date that the scroller can scroll
+     * 
+     * @param c the maximum date (inclusive)
+     */
+    public void setMaxTime(Calendar c) {
+    	if (mTime==null) {
+    		throw new RuntimeException("You have to call setTime before setting a MinimumTime!");
+    	}
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View v = getChildAt(i);
+            if (v instanceof ScrollLayout) {
+                ScrollLayout scroller = (ScrollLayout)v;
+                scroller.setMaxTime(c.getTimeInMillis());
+            }
+        }
+    }
+    
+    /**
+     * sets the minute interval of the scroll layouts.
+     * @param minInterval
+     */
+    public void setMinuteInterval(int minInterval) {
+    	this.minuteInterval = minInterval;
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View v = getChildAt(i);
+            if (v instanceof ScrollLayout) {
+                ScrollLayout scroller = (ScrollLayout)v;
+                scroller.setMinuteInterval(minInterval);
+            }
+        }
     }
 
     /**
@@ -88,11 +144,17 @@ public class SliderContainer extends LinearLayout {
             }
             if (v instanceof ScrollLayout) {
                 ScrollLayout scroller = (ScrollLayout)v;
-                scroller.setTime(mTime.getTimeInMillis(),0);
+                scroller.setTime(mTime.getTimeInMillis());
             }
         }
 
         if (mOnTimeChangeListener != null) {
+        	if (minuteInterval>1) {
+        		// rounds the minutes to the closest multiple of minuteInterval
+        		int minutes = mTime.get(Calendar.MINUTE);
+        		int diff = ((minutes+minuteInterval/2)/minuteInterval)*minuteInterval - minutes;
+        		mTime.add(Calendar.MINUTE, diff);
+        	}
             mOnTimeChangeListener.onTimeChange(mTime);
         }
     }

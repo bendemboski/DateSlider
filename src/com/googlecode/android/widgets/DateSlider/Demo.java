@@ -152,18 +152,25 @@ static final int DATETIMESELECTOR_ID = 5;
         // here we initiate the corresponding DateSlideSelector and return the dialog to its caller
 
         // get todays date and the time
+    	final Calendar minTime = Calendar.getInstance();
+    	minTime.set(2011, 8, 15);
+    	
+    	// set a an upper limit
+    	final Calendar maxTime = Calendar.getInstance();
+    	maxTime.add(Calendar.DAY_OF_MONTH, 14);
+    	
         final Calendar c = Calendar.getInstance();
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
-            return new DefaultDateSlider(this,mDateSetListener,c);
+            return new DefaultDateSlider(this,mDateSetListener,c,c,maxTime);
         case ALTERNATIVEDATESELECTOR_ID:
-            return new AlternativeDateSlider(this,mDateSetListener,c);
+            return new AlternativeDateSlider(this,mDateSetListener,c,c,null);
         case CUSTOMDATESELECTOR_ID:
             return new CustomDateSlider(this,mDateSetListener,c);
         case MONTHYEARDATESELECTOR_ID:
             return new MonthYearDateSlider(this,mMonthYearSetListener,c);
         case TIMESELECTOR_ID:
-            return new TimeSlider(this,mTimeSetListener,c);
+            return new TimeSlider(this,mTimeSetListener,c,15);
         case DATETIMESELECTOR_ID:
             return new DateTimeSlider(this,mDateTimeSetListener,c);
         }

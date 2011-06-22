@@ -3,8 +3,7 @@
     <style name="Scroller">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">7px</item>
-        <item name="android:paddingRight">7px</item>
-        <item name="android:background">@drawable/slider_nosnap</item>
+        <item name="android:background">@drawable/slider_back</item>
+        <item name="android:layout_margin">3dp</item>
     </style>
 </resources>

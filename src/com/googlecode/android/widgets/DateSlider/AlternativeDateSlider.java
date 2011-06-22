@@ -24,7 +24,13 @@ import java.util.Calendar;
 import android.content.Context;
 
 public class AlternativeDateSlider extends DateSlider {
-    public AlternativeDateSlider(Context context, OnDateSetListener l, Calendar calendar) {
-        super(context, R.layout.altdateslider, l, calendar);
+	
+	public AlternativeDateSlider(Context context, OnDateSetListener l, Calendar calendar) {
+		this(context, l, calendar, null, null);
+	}
+	
+    public AlternativeDateSlider(Context context, OnDateSetListener l, Calendar calendar, 
+    		Calendar minDate, Calendar maxDate) {
+        super(context, R.layout.altdateslider, l, calendar, minDate, maxDate);
     }
 }
