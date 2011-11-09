@@ -5,5 +5,15 @@
         <attr name="labelerFormat" format="string"/>
         <attr name="childWidth" format="dimension"/>
         <attr name="childHeight" format="dimension"/>
+        <attr name="android:gravity"/>
+<!--         <attr name="childGravity">
+            <flag name="center" value="0x011"/>
+            <flag name="center_horizontal" value="0x001"/>
+            <flag name="center_certical" value="0x010"/>
+            <flag name="left" value="0x003"/>
+            <flag name="right" value="0x005"/>
+            <flag name="top" value="0x030"/>
+            <flag name="bottom" value="0x050"/>
+        </attr> -->
     </declare-styleable>
 </resources>

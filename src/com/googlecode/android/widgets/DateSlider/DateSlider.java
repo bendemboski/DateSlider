@@ -24,6 +24,7 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -46,6 +47,9 @@ public class DateSlider extends Dialog {
     protected TextView mTitleText;
     protected SliderContainer mContainer;
     protected int minuteInterval;
+    
+    protected Handler scrollHandler = new Handler();
+    private Runnable lastScrollRunnable;
 
 
     public DateSlider(Context context, int layoutID, OnDateSetListener l, Calendar initialTime) {
@@ -110,9 +114,39 @@ public class DateSlider extends Dialog {
         Button cancelButton = (Button) findViewById(R.id.dateSliderCancelButton);
         cancelButton.setOnClickListener(cancelButtonClickListener);
     }
-
+    
     public void setTime(Calendar c) {
         mContainer.setTime(c);
+    }
+    
+    /**
+     * Scrolls the time to the provided target using an animation
+     * @param target
+     * @param durationInMillis duration of the scroll animation
+     * @param linearMovement if true the scrolling will have a constant speed, if false the animation
+     * will slow down at the end
+     */
+    public void scrollToTime(Calendar target, long durationInMillis, final boolean linearMovement) {
+    	final Calendar ca = Calendar.getInstance();
+    	final long startTime=System.currentTimeMillis();
+    	final long endTime=startTime+durationInMillis;
+    	final long startMillis = getTime().getTimeInMillis();
+    	final long diff = target.getTimeInMillis()-startMillis;
+    	if (lastScrollRunnable!=null) scrollHandler.removeCallbacks(lastScrollRunnable);
+    	lastScrollRunnable = new Runnable() {
+			@Override
+			public void run() {
+				long currTime = System.currentTimeMillis();
+				double fraction = 1-(endTime-currTime)/(double)(endTime-startTime);
+				if (!linearMovement) fraction = Math.pow(fraction,0.2);
+				if (fraction>1) fraction=1;
+				ca.setTimeInMillis(startMillis+(long)(diff*fraction));
+				setTime(ca);
+				// if not complete yet, call again in 20 milliseconds
+				if (fraction<1) scrollHandler.postDelayed(this, 20); 
+			}
+		};
+    	scrollHandler.post(lastScrollRunnable);
     }
 
     private android.view.View.OnClickListener okButtonClickListener = new android.view.View.OnClickListener() {

@@ -52,7 +52,7 @@ import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
  */
 public class ScrollLayout extends LinearLayout {
 
-    private static String TAG = "SCROLLLAYOUT";
+    //private static String TAG = "SCROLLLAYOUT";
 
     private Scroller mScroller;
     /**
@@ -79,7 +79,7 @@ public class ScrollLayout extends LinearLayout {
      */
     private long currentTime = System.currentTimeMillis();
     private long minTime = -1, maxTime = -1;
-    private int minuteInterval = 1;
+    //private int minuteInterval = 1;
     
     /**
      * The width of each child
@@ -89,6 +89,8 @@ public class ScrollLayout extends LinearLayout {
      * The height of each child
      */
     private int objHeight;
+    
+    private int objGravity;
     
     private Drawable rightShadow, leftShadow;
 
@@ -138,7 +140,9 @@ public class ScrollLayout extends LinearLayout {
                 mLabeler.getPreferredViewWidth(context));
         objHeight = a.getDimensionPixelSize(R.styleable.ScrollLayout_childHeight,
                 mLabeler.getPreferredViewHeight(context));
-
+        
+        objGravity = a.getInt(R.styleable.ScrollLayout_android_gravity, Gravity.CENTER);
+        
         a.recycle();
     }
 
@@ -176,6 +180,7 @@ public class ScrollLayout extends LinearLayout {
             LayoutParams lp = new LayoutParams(objWidth, objHeight);
             TimeView ttv = mLabeler.createView(getContext(), i == centerIndex);
             addView((View)ttv, lp);
+            ttv.setGravity(objGravity);
         }
 
         // Now we need to set the times on all of the TimeViews. We start with the center
@@ -185,18 +190,18 @@ public class ScrollLayout extends LinearLayout {
         mCenterView.setVals(mLabeler.getElem(currentTime));
         
         
-        Log.v(TAG, "mCenter: " + mCenterView.getTimeText() + " minInterval " + minuteInterval);
+        //Log.v(TAG, "mCenter: " + mCenterView.getTimeText() + " minInterval " + minuteInterval);
 
         // TODO: Do I need to use endTime, or can I just use the point time?
         for (int i = centerIndex + 1; i < childCount; i++) {
             TimeView lastView = (TimeView)getChildAt(i - 1);
             TimeView thisView = (TimeView)getChildAt(i);
-            thisView.setVals(mLabeler.add(lastView.getEndTime(), 1));
+            thisView.setVals(mLabeler.add(lastView.getStartTime(), 1));
         }
         for (int i = centerIndex - 1; i >= 0; i--) {
             TimeView lastView = (TimeView)getChildAt(i + 1);
             TimeView thisView = (TimeView)getChildAt(i);
-            thisView.setVals(mLabeler.add(lastView.getEndTime(), -1));
+            thisView.setVals(mLabeler.add(lastView.getStartTime(), -1));
         }
 
         // Finally, set our actual children width
@@ -248,19 +253,22 @@ public class ScrollLayout extends LinearLayout {
      * @param minInterval
      */
     public void setMinuteInterval(int minInterval) {
-    	this.minuteInterval = minInterval;
     	mLabeler.setMinuteInterval(minInterval);
     	if (minInterval>1) {
     		final int centerIndex = (getChildCount() / 2);
+    		TimeView lastView = (TimeView)getChildAt(centerIndex);
+    		// set center view to a multiple of the minuteInterval
+    		lastView.setVals(mLabeler.getElem(lastView.getStartTime()));
+    		
             for (int i = centerIndex + 1; i < getChildCount(); i++) {
-                TimeView lastView = (TimeView)getChildAt(i - 1);
+                lastView = (TimeView)getChildAt(i - 1);
                 TimeView thisView = (TimeView)getChildAt(i);
-                thisView.setVals(mLabeler.add(lastView.getEndTime(), 1));
+                thisView.setVals(mLabeler.add(lastView.getStartTime(), 1));
             }
             for (int i = centerIndex - 1; i >= 0; i--) {
-                TimeView lastView = (TimeView)getChildAt(i + 1);
+                lastView = (TimeView)getChildAt(i + 1);
                 TimeView thisView = (TimeView)getChildAt(i);
-                thisView.setVals(mLabeler.add(lastView.getEndTime(), -1));
+                thisView.setVals(mLabeler.add(lastView.getStartTime(), -1));
             }
     	}
     }
@@ -278,7 +286,7 @@ public class ScrollLayout extends LinearLayout {
         TimeView currelem = (TimeView)getChildAt(pos);
         if (loops>2 || currelem.getStartTime() <= time && currelem.getEndTime() >= time) {
             if (loops>2) {
-                Log.d(TAG,String.format("time: %d, start: %d, end: %d", time, currelem.getStartTime(), currelem.getEndTime()));
+                Log.w("ABC",String.format("LOOPOVERLFOW: time: %d, start: %d, end: %d", time, currelem.getStartTime(), currelem.getEndTime()));
                 return;
             }
             double center = getWidth()/2.0;
@@ -328,7 +336,7 @@ public class ScrollLayout extends LinearLayout {
      * @param notify if false, the listeners won't be called
      */
     protected void reScrollTo(int x, int y, boolean notify) {
-    	if (notify) Log.d(TAG,String.format("scroll to " + x));
+    	//if (notify) Log.d(TAG,String.format("scroll to " + x));
     	int scrollX = getScrollX();
     	int scrollDiff = x - mLastScroll;
     	
@@ -396,8 +404,8 @@ public class ScrollLayout extends LinearLayout {
             int left = (getChildCount()/2)*objWidth-scrollX;
             double f = (center-left)/objWidth;
             currentTime = (long)(mCenterView.getStartTime()+(mCenterView.getEndTime()-mCenterView.getStartTime())*f);
-            if (notify) Log.d(TAG,String.format("real time " + currentTime));
-            if (notify) Log.d(TAG,String.format(""));
+            //if (notify) Log.d(TAG,String.format("real time " + currentTime));
+            //if (notify) Log.d(TAG,String.format(""));
             listener.onScroll(currentTime);
         };
         mLastScroll = x;
@@ -445,7 +453,7 @@ public class ScrollLayout extends LinearLayout {
             if (index >= 0 && index < getChildCount()) {
                 tv.setVals((TimeView)getChildAt(index));
             } else {
-                tv.setVals(mLabeler.add(tv.getEndTime(), -steps));
+                tv.setVals(mLabeler.add(tv.getStartTime(), -steps));
             }
             if (minTime != -1 && tv.getEndTime() < minTime) {
             	if (!tv.isOutOfBounds()) tv.setOutOfBounds(true);

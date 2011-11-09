@@ -12,4 +12,9 @@ public class TimeObject {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+    
+    @Override
+    public String toString() {
+    	return String.format("TimeObject: '%s' [%d - %d]", text, startTime, endTime);
+    } 
 }

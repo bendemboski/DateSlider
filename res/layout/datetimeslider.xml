@@ -9,7 +9,8 @@
         style="@style/Scroller"
         app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MonthYearLabeler"
         app:labelerFormat="%tb %tY"
-        app:childWidth="180dp"/>
+        app:childWidth="180dp"
+        android:gravity="left|top"/>
     <com.googlecode.android.widgets.DateSlider.ScrollLayout
         style="@style/Scroller"
         app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.DayDateLabeler"

@@ -3,7 +3,6 @@ package com.googlecode.android.widgets.DateSlider.timeview;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.widget.TextView;
 
 import com.googlecode.android.widgets.DateSlider.TimeObject;
@@ -35,7 +34,6 @@ public class TimeTextView extends TextView implements TimeView {
      * @param textSize textSize in dps
      */
     protected void setupView(boolean isCenterView, int textSize) {
-        setGravity(Gravity.CENTER);
         setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
         if (isCenterView) {
             setTypeface(Typeface.DEFAULT_BOLD);
@@ -44,7 +42,6 @@ public class TimeTextView extends TextView implements TimeView {
             setTextColor(0xFF666666);
         }
     }
-
     
     public void setVals(TimeObject to) {
         setText(to.text);

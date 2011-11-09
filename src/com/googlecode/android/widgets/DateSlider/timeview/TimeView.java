@@ -60,4 +60,6 @@ public interface TimeView {
     
     public boolean isOutOfBounds();
     public void setOutOfBounds(boolean outOfBounds);
+    
+    public abstract void setGravity(int layout);
 }

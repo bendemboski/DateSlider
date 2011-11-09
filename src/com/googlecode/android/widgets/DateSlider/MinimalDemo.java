@@ -73,12 +73,14 @@ static final int DEFAULTDATESELECTOR_ID = 0;
         // this method is called after invoking 'showDialog' for the first time
         // here we initiate the corresponding DateSlideSelector and return the dialog to its caller
     	
-    	// get today's date and time
-        final Calendar c = Calendar.getInstance();
         
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
-            return new DefaultDateSlider(this,mDateSetListener,c);
+        	// get today's date and time
+            final Calendar c = Calendar.getInstance();
+            final Calendar maxDate = Calendar.getInstance();
+            maxDate.add(Calendar.DAY_OF_MONTH, 20);
+            return new DefaultDateSlider(this,mDateSetListener,c,c,maxDate);
         }
         return null;
     }

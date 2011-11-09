@@ -9,7 +9,8 @@
         style="@style/Scroller"
         app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.YearLabeler"
         app:labelerFormat="%tY"
-        app:childWidth="200dp"/>
+        app:childWidth="200dp"
+        android:gravity="left|bottom"/>
     <com.googlecode.android.widgets.DateSlider.ScrollLayout
         style="@style/Scroller"
         app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.WeekLabeler"

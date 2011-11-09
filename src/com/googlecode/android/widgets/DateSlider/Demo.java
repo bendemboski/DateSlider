@@ -169,8 +169,8 @@ static final int DATETIMESELECTOR_ID = 5;
     protected Dialog onCreateDialog(int id) {
         // this method is called after invoking 'showDialog' for the first time
         // here we initiate the corresponding DateSlideSelector and return the dialog to its caller
-    	
         final Calendar c = Calendar.getInstance();
+        
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
             return new DefaultDateSlider(this,mDateSetListener,c);
@@ -185,14 +185,15 @@ static final int DATETIMESELECTOR_ID = 5;
         case MONTHYEARDATESELECTOR_ID:
             return new MonthYearDateSlider(this,mMonthYearSetListener,c);
         case TIMESELECTOR_ID:
-            return new TimeSlider(this,mTimeSetListener,c,15);
+            return new TimeSlider(this,mTimeSetListener,c,5);
         case TIMESELECTOR_WITHLIMIT_ID:
         	final Calendar minTime = Calendar.getInstance();
         	minTime.add(Calendar.HOUR, -2);
-            return new TimeSlider(this,mTimeSetListener,c,minTime,c,5);
+            return new TimeSlider(this,mTimeSetListener,c,5);
         case DATETIMESELECTOR_ID:
             return new DateTimeSlider(this,mDateTimeSetListener,c);
         }
         return null;
     }
+    
 }
