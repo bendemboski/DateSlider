@@ -473,6 +473,7 @@ public class ScrollLayout extends LinearLayout {
         final int action = ev.getAction();
         final int x = (int) ev.getX();
         if (action == MotionEvent.ACTION_DOWN) {
+        	getParent().requestDisallowInterceptTouchEvent(true);
             mDragMode = true;
             if (!mScroller.isFinished()) {
                 mScroller.abortAnimation();
